@@ -23,3 +23,16 @@ def check_word():
     validity = boggle_game.check_valid_word(board, word)
 
     return jsonify({'result': validity})
+
+@app.route('/score', methods=["POST"])
+def save_score():
+    """Save the score"""
+    score = request.json["score"]
+    high_score = session.get("high_score", 0)
+    nplays = session.get("nplays", 0)
+
+    session['nplays'] = nplays + 1
+    session['high_score'] = max(high_score, score)
+    
+    return jsonify(brokeRecord=score > high_score)
+

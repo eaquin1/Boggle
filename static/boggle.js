@@ -1,32 +1,75 @@
+class BoggleGame {
+    constructor(boardId, secs = 60) {
+        this.secs = secs; //game length
+        this.showTimer();
 
-let wordList = new Set()
+        this.score = 0;
+        this.wordList = new Set();
+        this.board = $("#" + boardId);
 
-$(".add-word").on("click", async function(e) {
-    e.preventDefault();
+
+        this.timer = setInterval(this.tick.bind(this), 1000);
+
+        $(".add-word").on("submit", this.handleSubmit.bind(this));
+    }
     
-    const $word = $("#guess");
+    async handleSubmit(e) {
+        e.preventDefault();
+        
+        const $word = $("#guess");
 
-    let word = $word.val().toLowerCase();
-    if (!word) return;
+        let word = $word.val().toLowerCase();
+        if (!word) return;
 
-    if (wordList.has(word)) {
-        $(".msg").html("You've already guessed this word")
+        if (this.wordList.has(word)) {
+            $(".msg").html("You've already guessed this word")
+            $word.val("").focus();
+            return
+        }
+
+        const response = await axios.get("/check-word", { params: { word:word}});
+        let validity = response.data.result
+
+        if (validity === "ok") {
+            $(".msg").html("This word is correct!");
+            let newLi = $("<li>").text(word);
+            $(".words").append(newLi);
+            this.wordList.add(word);
+            this.score += word.length;
+            $("#score").text(this.score)
+        } else if (validity === "not-word") {
+            $(".msg").html("This word is not in the English lanuage")
+        } else if (validity === "not-on-board") {
+            $(".msg").html("This word is not on the board!")
+        }
         $word.val("").focus();
-        return
+    };
+
+    /* Update timer in DOM */
+    
+    showTimer() {
+        $(".timer").text(this.secs);
     }
 
-    response = await axios.get("/check-word", { params: { word:word}});
-    let validity = response.data.result
+    /* Tick: handle a second passing in game */
 
-    if (validity === "ok") {
-        $(".msg").html("This word is correct!");
-        let newLi = $("<li>").text(word);
-        $(".words").append(newLi);
-        wordList.add(word);
-    } else if (validity === "not-word") {
-        $(".msg").html("This word is not in the English lanuage")
-    } else if (validity === "not-on-board") {
-        $(".msg").html("This word not on the board!")
+    async tick() {
+        this.secs -= 1;
+        this.showTimer();
+
+        if(this.secs === 0) {
+            clearInterval(this.timer)
+            $(".add-word").hide();
+            await this.scoreGame();
+        }
     }
-    $word.val("").focus();
-});
+
+    async scoreGame() {
+        const response = await axios.post("/score", {score: this.score});
+        if(response.data.brokeRecord) {
+            console.log(response.data.brokeRecord)
+            $(".msg").html("You have a new highscore!")
+        }
+    }
+    
+}
