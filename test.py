@@ -42,7 +42,7 @@ class FlaskTests(TestCase):
         self.assertEqual(resp.json['result'], 'not-on-board')
 
     def test_high_score(self):
-        """Test is high score works"""
+        """Test if high score works"""
         with self.client:
             with self.client.session_transaction() as sess:
                 sess['high_score'] = 99
@@ -51,4 +51,5 @@ class FlaskTests(TestCase):
                                     data={'score': 32})
 
             self.assertEqual(resp.status_code, 200)
+            self.assertTrue(resp.json)
 
