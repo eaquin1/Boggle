@@ -1,12 +1,10 @@
 class BoggleGame {
-    constructor(boardId, secs = 60) {
+    constructor(secs = 60) {
         this.secs = secs; //game length
         this.showTimer();
 
         this.score = 0;
         this.wordList = new Set();
-        this.board = $("#" + boardId);
-
 
         this.timer = setInterval(this.tick.bind(this), 1000);
 
@@ -59,7 +57,6 @@ class BoggleGame {
 
         if(this.secs === 0) {
             clearInterval(this.timer)
-            
             await this.scoreGame();
         }
     }
