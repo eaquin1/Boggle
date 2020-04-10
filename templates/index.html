@@ -5,34 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boggle</title>
     <link rel="stylesheet" href="/static/boggle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Boggle!</h1>
-    <form method="POST" class="add-word">
-        <label for="guess">Your word:</label>
-        <input type="text" name="word" id="guess" placeholder="Enter a word" autofocus>
-        <button>Submit</button>
-    </form>
-    <div>Timer: <span class="timer"></span></div>
-    <table class="board">
-        <tbody>
-        {% for row in board %}
-            <tr>
-                {% for cell in row %}
-                <td>{{cell}}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="container">
+        <h1>BOGGLE</h1>
+        <form method="POST" class="add-word">
+            <label for="guess">Your word:</label>
+            <input type="text" name="word" id="guess" placeholder="Enter a word" autofocus>
+            <button>Submit</button>
+        </form>
+        <div>Timer: <span class="timer"></span></div>
+        <table class="board">
+            <tbody>
+            {% for row in board %}
+                <tr>
+                    {% for cell in row %}
+                    <td>{{cell}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    <p class="msg">
-        <!-- our JS will put messages here dynamically -->
-    </p>
-    <h3>Score: <span id="score"></span></h3>
-    <ul class="words">
-        <!-- our JS will put words here as they score -->
-    </ul>
+        <p class="msg">
+            <!-- our JS will put messages here dynamically -->
+        </p>
+        <h3>Score: <span id="score"></span></h3>
+        <ul class="words">
+            <!-- our JS will put words here as they score -->
+        </ul>
+</div>
     <script src="http://unpkg.com/jquery"></script>
     <script src="https://unpkg.com/axios@0.19.0/dist/axios.js"></script>
     <script src="/static/boggle.js"></script>

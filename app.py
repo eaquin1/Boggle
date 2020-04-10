@@ -13,7 +13,9 @@ def home():
     """Render Home Page"""
     board = boggle_game.make_board()
     session['board'] = board
-    return render_template('index.html', board=board)
+    high_score = session.get("high_score", 0)
+    nplays = session.get("nplays", 0)
+    return render_template('index.html', board=board, highscore = high_score, nplays = nplays)
 
 @app.route('/check-word')
 def check_word():
@@ -33,6 +35,6 @@ def save_score():
 
     session['nplays'] = nplays + 1
     session['high_score'] = max(high_score, score)
-    
+
     return jsonify(brokeRecord=score > high_score)
 

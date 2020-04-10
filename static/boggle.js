@@ -38,9 +38,9 @@ class BoggleGame {
             this.score += word.length;
             $("#score").text(this.score)
         } else if (validity === "not-word") {
-            $(".msg").html("This word is not in the English lanuage")
+            $(".msg").html(`${word} is not in the English lanuage`)
         } else if (validity === "not-on-board") {
-            $(".msg").html("This word is not on the board!")
+            $(".msg").html(`${word} is not on the board!`)
         }
         $word.val("").focus();
     };
@@ -59,16 +59,18 @@ class BoggleGame {
 
         if(this.secs === 0) {
             clearInterval(this.timer)
-            $(".add-word").hide();
+            
             await this.scoreGame();
         }
     }
 
     async scoreGame() {
+        $(".add-word").hide();
         const response = await axios.post("/score", {score: this.score});
         if(response.data.brokeRecord) {
-            console.log(response.data.brokeRecord)
-            $(".msg").html("You have a new highscore!")
+            $(".msg").html(`You have a new highscore: ${this.score}!`)
+        } else {
+            $(".msg").html(`Game over! Your final score is: ${this.score}!`)
         }
     }
     
